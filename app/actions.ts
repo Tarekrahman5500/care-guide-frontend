@@ -135,6 +135,10 @@ export async function deletePost(id: string): Promise<ApiResponse> {
 
 // ===== Profile =====
 
+export async function getMe(): Promise<ApiResponse> {
+  return fetchApi('/users/me', await authed('GET'));
+}
+
 export async function updateProfile(
   userId: string,
   data: { name: string; interests: string[] }

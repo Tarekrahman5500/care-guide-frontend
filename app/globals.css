@@ -2,27 +2,51 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Muallim-style theme: emerald primary, gold accent, warm neutrals, dark green sidebar. */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #faf9f6;
+  --foreground: #1b221f;
   --card: #ffffff;
-  --card-foreground: #0f172a;
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
+  --card-foreground: #1b221f;
+  --primary: #059669;
+  --primary-hover: #047857;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #475569;
-  --accent: #e0e7ff;
-  --accent-foreground: #3730a3;
+  --secondary: #f3f2ee;
+  --secondary-foreground: #1f2a26;
+  --muted: #f3f2ee;
+  --muted-foreground: #6d7a75;
+  --accent: #fbbf24;
+  --accent-foreground: #1b221f;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --ring: #6366f1;
+  --border: #e8e6e1;
+  --ring: #059669;
   --radius: 0.75rem;
 
-  /* Tailwind CSS v4 color utility tokens */
+  --sidebar: #0e1512;
+  --sidebar-foreground: #c6cdca;
+  --sidebar-accent: #18221e;
+  --sidebar-border: #1c2723;
+
+}
+
+.dark {
+  --background: #0d1210;
+  --foreground: #f5f3ee;
+  --card: #161d1a;
+  --card-foreground: #f5f3ee;
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --secondary: #1f2a26;
+  --secondary-foreground: #ebe9e3;
+  --muted: #1f2a26;
+  --muted-foreground: #8b9692;
+  --accent: #fbbf24;
+  --border: #243029;
+  --ring: #10b981;
+}
+
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -40,135 +64,86 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-ring: var(--ring);
-}
-
-@theme inline {
-  --font-sans: var(--font-geist-sans);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-border: var(--sidebar-border);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-jakarta);
   --font-mono: var(--font-geist-mono);
 }
 
-.dark {
-  --background: #090d16;
-  --foreground: #f8fafc;
-  --card: #111827;
-  --card-foreground: #f8fafc;
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --primary-foreground: #ffffff;
-  --secondary: #1f2937;
-  --secondary-foreground: #f3f4f6;
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --accent: #312e81;
-  --accent-foreground: #e0e7ff;
-  --destructive: #f87171;
-  --destructive-foreground: #ffffff;
-  --border: #1f2937;
-  --ring: #818cf8;
+/* Remap the palette the pages already use: indigo/violet/purple/teal -> emerald, slate -> warm green-neutral. */
+@theme {
+  --color-indigo-50: #ecfdf5;  --color-indigo-100: #d1fae5; --color-indigo-200: #a7f3d0;
+  --color-indigo-300: #6ee7b7; --color-indigo-400: #34d399; --color-indigo-500: #10b981;
+  --color-indigo-600: #059669; --color-indigo-700: #047857; --color-indigo-800: #065f46;
+  --color-indigo-900: #064e3b; --color-indigo-950: #022c22;
+  --color-violet-50: #ecfdf5;  --color-violet-100: #d1fae5; --color-violet-200: #a7f3d0;
+  --color-violet-300: #6ee7b7; --color-violet-400: #34d399; --color-violet-500: #10b981;
+  --color-violet-600: #059669; --color-violet-700: #047857; --color-violet-800: #065f46;
+  --color-violet-900: #064e3b; --color-violet-950: #022c22;
+  --color-purple-50: #ecfdf5;  --color-purple-100: #d1fae5; --color-purple-200: #a7f3d0;
+  --color-purple-300: #6ee7b7; --color-purple-400: #34d399; --color-purple-500: #10b981;
+  --color-purple-600: #059669; --color-purple-700: #047857; --color-purple-800: #065f46;
+  --color-purple-900: #064e3b; --color-purple-950: #022c22;
+  --color-teal-50: #ecfdf5;  --color-teal-100: #d1fae5; --color-teal-200: #a7f3d0;
+  --color-teal-300: #6ee7b7; --color-teal-400: #34d399; --color-teal-500: #10b981;
+  --color-teal-600: #059669; --color-teal-700: #047857; --color-teal-800: #065f46;
+  --color-teal-900: #064e3b; --color-teal-950: #022c22;
+
+  --color-slate-50: #faf9f6;  --color-slate-100: #f3f2ee; --color-slate-200: #e8e6e1;
+  --color-slate-300: #d3d1cb; --color-slate-400: #9aa39f; --color-slate-500: #6d7a75;
+  --color-slate-600: #525e5a; --color-slate-700: #3a4541; --color-slate-800: #243029;
+  --color-slate-900: #161d1a; --color-slate-950: #0d1210;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Glassmorphism Cards & Navbars with 100% Contrast */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading), sans-serif;
+}
+
 .glass-card {
-  background-color: #ffffff;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid #e2e8f0;
-  color: #0f172a;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  color: var(--card-foreground);
 }
 
-.dark .glass-card {
-  background-color: #111827;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid #1f2937;
-  color: #f8fafc;
-}
-
-.glass-nav {
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.dark .glass-nav {
-  background-color: rgba(9, 13, 22, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid #1f2937;
-}
-
-/* Form inputs in Light & Dark modes */
 input, textarea, select {
-  background-color: #ffffff;
-  color: #0f172a;
-  border-color: #cbd5e1;
+  background-color: var(--card);
+  color: var(--foreground);
+  border-color: var(--border);
 }
-
 .dark input, .dark textarea, .dark select {
-  background-color: rgba(17, 24, 39, 0.8);
-  color: #f8fafc;
-  border-color: #1f2937;
+  background-color: rgba(31, 42, 38, 0.5);
 }
 
-/* Ambient glow accents */
-.ambient-glow {
-  position: relative;
+/* Section title with accent bar, as in the Muallim dashboard */
+.section-title {
+  font-family: var(--font-heading), sans-serif;
+  border-left: 3px solid var(--primary);
+  padding-left: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
 }
 
-.ambient-glow::before {
-  content: '';
-  position: absolute;
-  top: -100px;
-  right: -100px;
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
-  border-radius: 50%;
-  z-index: -1;
-  pointer-events: none;
-}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(120, 130, 125, 0.35); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(120, 130, 125, 0.55); }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.4);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.6);
-}
-
-/* Animations */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-.animate-fade-in {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+.animate-fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }

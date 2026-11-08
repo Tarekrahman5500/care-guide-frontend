@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, FormEvent, Suspense, startTransition } from 'react';
+import { Spinner } from '@/components/spinner';
 import { useSearchParams } from 'next/navigation';
 import { listNotes, createNote, updateNote, deleteNote } from '@/app/actions';
 import { getStoredUser, User } from '@/lib/auth';
@@ -48,6 +49,7 @@ function NotesContent() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Delete modal state
@@ -73,7 +75,7 @@ function NotesContent() {
       const res = await listNotes(page, limit);
       setLoading(false);
       if (res.success && res.data) {
-        setNotes(res.data);
+        setNotes(res.data.map((n: any) => ({ ...n, _id: n._id ?? n.id })));
         if (res.meta) {
           setMeta(res.meta);
         }
@@ -131,10 +133,14 @@ function NotesContent() {
   };
 
   const handleDeleteNote = async (id: string) => {
+    setDeleting(true);
     const res = await deleteNote(id);
+    setDeleting(false);
     setDeleteConfirmId(null);
     if (res.success) {
       loadNotes();
+    } else {
+      alert(res.error?.message || 'Failed to delete note');
     }
   };
 
@@ -175,7 +181,7 @@ function NotesContent() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search notes by title or content..."
-          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900/80 border border-slate-300 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 placeholder-slate-400 shadow-xs"
+          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900/80 border border-slate-300 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100 placeholder-slate-400 shadow-sm"
         />
       </div>
 
@@ -185,7 +191,7 @@ function NotesContent() {
           {[1, 2, 3, 4, 5, 6].map((n) => (
             <div
               key={n}
-              className="h-44 bg-white dark:bg-[#111827] rounded-2xl p-5 border border-slate-200 dark:border-slate-800 animate-pulse space-y-3"
+              className="h-44 bg-white dark:bg-[#161d1a] rounded-xl p-5 border border-slate-200 dark:border-slate-800 animate-pulse space-y-3"
             >
               <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-md w-3/4" />
               <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded-md w-full" />
@@ -194,7 +200,7 @@ function NotesContent() {
           ))}
         </div>
       ) : filteredNotes.length === 0 ? (
-        <div className="bg-white dark:bg-[#111827] rounded-2xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-3 max-w-md mx-auto my-8 shadow-xs">
+        <div className="bg-white dark:bg-[#161d1a] rounded-xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-3 max-w-md mx-auto my-8 shadow-sm">
           <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-500 flex items-center justify-center mx-auto">
             <FileText className="w-6 h-6" />
           </div>
@@ -205,7 +211,7 @@ function NotesContent() {
           {!searchQuery && (
             <button
               onClick={handleOpenCreateModal}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-xs transition-all inline-flex items-center gap-1.5 mt-2"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-sm transition-all inline-flex items-center gap-1.5 mt-2"
             >
               <Plus className="w-3.5 h-3.5" /> Add Note
             </button>
@@ -216,7 +222,7 @@ function NotesContent() {
           {filteredNotes.map((note) => (
             <div
               key={note._id || note.id}
-              className="bg-white dark:bg-[#111827] rounded-2xl p-5 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-600 transition-all flex flex-col justify-between space-y-4 group shadow-xs"
+              className="bg-white dark:bg-[#161d1a] rounded-xl p-5 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-600 transition-all flex flex-col justify-between space-y-4 group shadow-sm"
             >
               <div className="space-y-2">
                 <div className="flex items-start justify-between gap-2">
@@ -292,7 +298,7 @@ function NotesContent() {
       {/* Create / Edit Note Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-lg bg-white dark:bg-[#111827] rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+          <div className="w-full max-w-lg bg-white dark:bg-[#161d1a] rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <FileText className="w-4 h-4 text-indigo-500" />
@@ -349,8 +355,9 @@ function NotesContent() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold text-xs rounded-xl shadow-md shadow-indigo-600/30 transition-all"
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold text-xs rounded-xl shadow-md shadow-indigo-600/30 transition-all inline-flex items-center gap-2"
                 >
+                  {saving && <Spinner className="w-3.5 h-3.5" />}
                   {saving ? 'Saving...' : editingNote ? 'Update Note' : 'Create Note'}
                 </button>
               </div>
@@ -362,7 +369,7 @@ function NotesContent() {
       {/* Delete Confirmation Modal */}
       {deleteConfirmId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-sm bg-white dark:bg-[#111827] rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 text-center">
+          <div className="w-full max-w-sm bg-white dark:bg-[#161d1a] rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4 text-center">
             <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-500 flex items-center justify-center mx-auto">
               <Trash2 className="w-6 h-6" />
             </div>
@@ -381,8 +388,10 @@ function NotesContent() {
               </button>
               <button
                 onClick={() => handleDeleteNote(deleteConfirmId)}
-                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded-xl shadow-md shadow-rose-600/30 transition-all"
+                disabled={deleting}
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white font-semibold text-xs rounded-xl shadow-md shadow-rose-600/30 transition-all inline-flex items-center gap-2"
               >
+                {deleting && <Spinner className="w-3.5 h-3.5" />}
                 Confirm Delete
               </button>
             </div>

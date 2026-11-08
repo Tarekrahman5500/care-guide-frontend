@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, FormEvent, startTransition } from 'react';
+import { Spinner } from '@/components/spinner';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { registerAction } from '@/app/actions';
@@ -62,11 +63,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 ambient-glow py-12">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-[#0d1210] text-slate-900 dark:text-slate-100 py-12">
       <div className="w-full max-w-lg space-y-6">
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-teal-400 items-center justify-center text-white shadow-lg shadow-indigo-500/25">
+          <div className="inline-flex w-12 h-12 rounded-2xl bg-white items-center justify-center text-slate-900 border border-border shadow-sm">
             <BookOpen className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
@@ -78,7 +79,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Register Form Card */}
-        <div className="glass-card rounded-2xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-800 space-y-5">
+        <div className="glass-card rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-800 space-y-5">
           {error && (
             <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs flex items-start gap-2.5">
               <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
@@ -182,10 +183,10 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-md shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 group mt-4"
+              className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 group mt-4"
             >
               {loading ? (
-                <span>Creating Account...</span>
+                <><Spinner /><span>Creating Account...</span></>
               ) : (
                 <>
                   <span>Create Account</span>

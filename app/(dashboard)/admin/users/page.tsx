@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, FormEvent, startTransition } from 'react';
+import { Spinner } from '@/components/spinner';
 import { listUsers, createUser, updateUser, deleteUser } from '@/app/actions';
 import {
   Users,
@@ -42,6 +43,7 @@ export default function AdminUsersPage() {
   const [interests, setInterests] = useState<string[]>([]);
   const [interestInput, setInterestInput] = useState('');
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const hasLoaded = useRef(false);
@@ -138,7 +140,9 @@ export default function AdminUsersPage() {
   const handleDeleteUser = async (id: string, userName: string) => {
     if (!confirm(`Are you sure you want to delete user "${userName}"?`)) return;
 
+    setDeletingId(id);
     const res = await deleteUser(id);
+    setDeletingId(null);
     if (res.success) {
       loadUsers();
     } else {
@@ -186,7 +190,7 @@ export default function AdminUsersPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search users by name, email, or role..."
-          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 text-slate-900 dark:text-slate-100 placeholder-slate-400 shadow-xs"
+          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 text-slate-900 dark:text-slate-100 placeholder-slate-400 shadow-sm"
         />
       </div>
 
@@ -281,10 +285,11 @@ export default function AdminUsersPage() {
                           </button>
                           <button
                             onClick={() => handleDeleteUser(id, u.name)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            disabled={deletingId === id}
+                            className="disabled:opacity-50 p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                             title="Delete User"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            {deletingId === id ? <Spinner /> : <Trash2 className="w-4 h-4" />}
                           </button>
                         </div>
                       </td>
@@ -300,7 +305,7 @@ export default function AdminUsersPage() {
       {/* Create / Edit User Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+          <div className="w-full max-w-md glass-card rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Users className="w-4 h-4 text-amber-500" />
@@ -436,8 +441,9 @@ export default function AdminUsersPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold text-xs rounded-xl shadow-md shadow-amber-600/30"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold text-xs rounded-xl shadow-md shadow-amber-600/30"
                 >
+                  {saving && <Spinner className="w-3.5 h-3.5" />}
                   {saving ? 'Saving...' : editingUser ? 'Update User' : 'Create User'}
                 </button>
               </div>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { getStoredUser, clearAuthSession, User } from '@/lib/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { LogOut, User as UserIcon, Shield, Menu, X, Sparkles, BookOpen, Plus } from 'lucide-react';
+import { LogOut, User as UserIcon, Shield, Menu, Plus } from 'lucide-react';
 
 interface NavbarProps {
   onToggleSidebar?: () => void;
@@ -28,9 +28,9 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#090d16]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border">
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between lg:justify-end h-16">
           {/* Left: Mobile Toggle & Brand */}
           <div className="flex items-center gap-3">
             <button
@@ -40,20 +40,6 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
             >
               <Menu className="w-5 h-5" />
             </button>
-
-            <Link href="/dashboard" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-teal-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-                <BookOpen className="w-5 h-5" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-700 dark:from-white dark:via-indigo-200 dark:to-slate-300 bg-clip-text text-transparent">
-                  CareGuide
-                </span>
-                <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold tracking-wide uppercase -mt-1">
-                  Secure Notes Platform
-                </span>
-              </div>
-            </Link>
           </div>
 
           {/* Right: Theme Toggle, Quick actions & User profile */}
@@ -97,7 +83,7 @@ export function Navbar({ onToggleSidebar }: NavbarProps) {
                       className="fixed inset-0 z-40"
                       onClick={() => setDropdownOpen(false)}
                     />
-                    <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-[#111827] shadow-xl border border-slate-200 dark:border-slate-800 py-1.5 z-50 animate-fade-in text-xs">
+                    <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-[#161d1a] shadow-xl border border-slate-200 dark:border-slate-800 py-1.5 z-50 animate-fade-in text-xs">
                       <div className="px-4 py-2.5 border-b border-slate-100 dark:border-slate-800">
                         <p className="font-semibold text-slate-900 dark:text-white truncate">{user.name}</p>
                         <p className="text-slate-500 dark:text-slate-400 truncate text-[11px]">{user.email}</p>

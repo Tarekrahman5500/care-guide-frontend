@@ -35,7 +35,7 @@ export default async function UserPostsPage({ params }: PageProps) {
         >
           <ArrowLeft className="w-4 h-4" /> Back to Posts Feed
         </Link>
-        <div className="glass-card rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-800 space-y-3 max-w-md mx-auto">
+        <div className="glass-card rounded-xl p-8 text-center border border-slate-200 dark:border-slate-800 space-y-3 max-w-md mx-auto">
           <MessageSquare className="w-8 h-8 text-rose-500 mx-auto" />
           <h2 className="text-sm font-bold text-slate-900 dark:text-white">User posts not found</h2>
           <p className="text-xs text-slate-500">
@@ -56,7 +56,7 @@ export default async function UserPostsPage({ params }: PageProps) {
       </Link>
 
       {/* User Info Header Card */}
-      <div className="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-4">
+      <div className="glass-card rounded-xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-bold text-xl flex items-center justify-center border border-indigo-200 dark:border-indigo-700">
@@ -121,7 +121,7 @@ export default async function UserPostsPage({ params }: PageProps) {
         </h2>
 
         {!userData.posts || userData.posts.length === 0 ? (
-          <div className="glass-card rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-800 space-y-2">
+          <div className="glass-card rounded-xl p-8 text-center border border-slate-200 dark:border-slate-800 space-y-2">
             <p className="text-xs font-semibold text-slate-600 dark:text-slate-400">
               No posts found for this user.
             </p>
@@ -131,7 +131,7 @@ export default async function UserPostsPage({ params }: PageProps) {
             {userData.posts.map((post: any) => (
               <div
                 key={post.id || post._id}
-                className="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-2"
+                className="glass-card rounded-xl p-6 border border-slate-200 dark:border-slate-800 space-y-2"
               >
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white">{post.title}</h3>

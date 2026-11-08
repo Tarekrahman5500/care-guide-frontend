@@ -59,7 +59,16 @@ export async function fetchApi<T = any>(
       cache: rest.cache || 'no-store',
     });
 
-    const data = await response.json();
+    // Empty/non-JSON bodies (e.g. 204 on DELETE) must not crash the call.
+    const text = await response.text();
+    let data: any = {};
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = { message: text.slice(0, 200) };
+      }
+    }
 
     if (!response.ok) {
       const errorMessage = Array.isArray(data.message)

@@ -22,7 +22,7 @@ export default async function AdminInterestsPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header Banner */}
-      <div className="glass-card rounded-3xl p-6 sm:p-8 border border-indigo-200/60 dark:border-indigo-900/40 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-teal-500/10 space-y-3">
+      <div className="glass-card rounded-xl p-6 sm:p-8 border border-indigo-200/60 dark:border-indigo-900/40 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-teal-500/10 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
@@ -45,13 +45,13 @@ export default async function AdminInterestsPage() {
       </div>
 
       {!res.success ? (
-        <div className="glass-card rounded-2xl p-8 text-center border border-rose-200 text-rose-700 dark:text-rose-300 space-y-2">
+        <div className="glass-card rounded-xl p-8 text-center border border-rose-200 text-rose-700 dark:text-rose-300 space-y-2">
           <PieChart className="w-8 h-8 mx-auto" />
           <h2 className="text-sm font-bold">Failed to load interest aggregations</h2>
           <p className="text-xs">{res.error?.message || 'Access restricted to admin users.'}</p>
         </div>
       ) : groups.length === 0 ? (
-        <div className="glass-card rounded-2xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-2">
+        <div className="glass-card rounded-xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-2">
           <PieChart className="w-8 h-8 text-slate-400 mx-auto" />
           <h2 className="text-sm font-bold text-slate-800 dark:text-slate-200">No interest groups registered</h2>
           <p className="text-xs text-slate-500">Users need to specify interest tags upon registration.</p>
@@ -61,7 +61,7 @@ export default async function AdminInterestsPage() {
           {groups.map((group) => (
             <div
               key={group.interest}
-              className="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 space-y-4 hover:border-indigo-400 transition-all flex flex-col justify-between"
+              className="glass-card rounded-xl p-5 border border-slate-200 dark:border-slate-800 space-y-4 hover:border-indigo-400 transition-all flex flex-col justify-between"
             >
               <div className="space-y-3">
                 {/* Card Title & Badge */}

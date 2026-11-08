@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, FormEvent, startTransition } from 'react';
-import { updateProfile } from '@/app/actions';
+import { Spinner } from '@/components/spinner';
+import { updateProfile, getMe } from '@/app/actions';
 import { getStoredUser, User } from '@/lib/auth';
 import {
   User as UserIcon,
@@ -34,6 +35,14 @@ export default function ProfilePage() {
       setName(u.name);
       setInterests(u.interests || []);
     }
+    // Stored session may lack interests; load the fresh profile so a save can't wipe them.
+    getMe().then((res) => {
+      if (res.success && res.data) {
+        setUser((prev) => ({ ...(prev || u), ...res.data } as User));
+        setName(res.data.name);
+        setInterests(res.data.interests || []);
+      }
+    });
   }, []);
 
   const toggleInterest = (tag: string) => {
@@ -62,7 +71,11 @@ export default function ProfilePage() {
     setError(null);
 
     const userId = user._id || user.id || '';
-    if (!userId) return;
+    if (!userId) {
+      setLoading(false);
+      setError('Could not determine your user id. Please sign in again.');
+      return;
+    }
 
     startTransition(async () => {
       const res = await updateProfile(userId, { name, interests });
@@ -110,7 +123,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Overview Card */}
-      <div className="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-6">
+      <div className="glass-card rounded-xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 space-y-6">
         <div className="flex items-center gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-500 text-white font-bold text-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
             {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
@@ -221,7 +234,7 @@ export default function ProfilePage() {
               disabled={loading}
               className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-md shadow-indigo-600/30 transition-all flex items-center gap-2"
             >
-              <Save className="w-4 h-4" />
+              {loading ? <Spinner /> : <Save className="w-4 h-4" />}
               {loading ? 'Saving Changes...' : 'Save Profile Changes'}
             </button>
           </div>

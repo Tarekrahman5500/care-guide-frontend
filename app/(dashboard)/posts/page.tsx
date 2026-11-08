@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, FormEvent, startTransition } from 'react';
+import { Spinner } from '@/components/spinner';
 import Link from 'next/link';
 import { listPosts, createPost, updatePost, deletePost } from '@/app/actions';
 import { getStoredUser, User } from '@/lib/auth';
@@ -39,6 +40,7 @@ export default function PostsPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const hasLoaded = useRef(false);
@@ -49,7 +51,7 @@ export default function PostsPage() {
       const res = await listPosts();
       setLoading(false);
       if (res.success && res.data) {
-        setPosts(res.data);
+        setPosts(res.data.map((p: any) => ({ ...p, _id: p._id ?? p.id })));
       }
     });
   }, []);
@@ -105,9 +107,13 @@ export default function PostsPage() {
 
   const handleDeletePost = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
+    setDeletingId(id);
     const res = await deletePost(id);
+    setDeletingId(null);
     if (res.success) {
       loadPosts();
+    } else {
+      alert(res.error?.message || 'Failed to delete post');
     }
   };
 
@@ -148,7 +154,7 @@ export default function PostsPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search posts by topic or content..."
-          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100 placeholder-slate-400 shadow-xs"
+          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100 placeholder-slate-400 shadow-sm"
         />
       </div>
 
@@ -158,7 +164,7 @@ export default function PostsPage() {
           {[1, 2, 3].map((n) => (
             <div
               key={n}
-              className="h-32 glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 animate-pulse space-y-3"
+              className="h-32 glass-card rounded-xl p-5 border border-slate-200 dark:border-slate-800 animate-pulse space-y-3"
             >
               <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-md w-1/2" />
               <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded-md w-full" />
@@ -166,7 +172,7 @@ export default function PostsPage() {
           ))}
         </div>
       ) : filteredPosts.length === 0 ? (
-        <div className="glass-card rounded-2xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-3 max-w-md mx-auto my-8">
+        <div className="glass-card rounded-xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-3 max-w-md mx-auto my-8">
           <div className="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-500 flex items-center justify-center mx-auto">
             <MessageSquare className="w-6 h-6" />
           </div>
@@ -177,7 +183,7 @@ export default function PostsPage() {
           {!searchQuery && (
             <button
               onClick={handleOpenCreateModal}
-              className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs rounded-xl shadow-xs transition-all inline-flex items-center gap-1.5 mt-2"
+              className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs rounded-xl shadow-sm transition-all inline-flex items-center gap-1.5 mt-2"
             >
               <Plus className="w-3.5 h-3.5" /> Publish Post
             </button>
@@ -187,12 +193,12 @@ export default function PostsPage() {
         <div className="space-y-4">
           {filteredPosts.map((post) => {
             const isAuthorOrAdmin =
-              currentUser?.role === 'admin' || (post.userId && currentUser?._id === post.userId);
+              currentUser?.role === 'admin' || (post.userId && (currentUser?._id ?? currentUser?.id) === post.userId);
 
             return (
               <div
                 key={post._id || post.id}
-                className="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 hover:border-teal-400 dark:hover:border-teal-600 transition-all space-y-3 group"
+                className="glass-card rounded-xl p-6 border border-slate-200 dark:border-slate-800 hover:border-teal-400 dark:hover:border-teal-600 transition-all space-y-3 group"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1">
@@ -229,10 +235,11 @@ export default function PostsPage() {
                       </button>
                       <button
                         onClick={() => handleDeletePost(post._id)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        disabled={deletingId === post._id}
+                        className="disabled:opacity-50 p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         title="Delete Post"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        {deletingId === post._id ? <Spinner className="w-3.5 h-3.5" /> : <Trash2 className="w-3.5 h-3.5" />}
                       </button>
                     </div>
                   )}
@@ -250,7 +257,7 @@ export default function PostsPage() {
       {/* Create / Edit Post Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-lg glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+          <div className="w-full max-w-lg glass-card rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <MessageSquare className="w-4 h-4 text-teal-500" />
@@ -307,8 +314,9 @@ export default function PostsPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white font-semibold text-xs rounded-xl shadow-md shadow-teal-600/30 transition-all"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white font-semibold text-xs rounded-xl shadow-md shadow-teal-600/30 transition-all"
                 >
+                  {saving && <Spinner className="w-3.5 h-3.5" />}
                   {saving ? 'Publishing...' : editingPost ? 'Update Post' : 'Publish Post'}
                 </button>
               </div>

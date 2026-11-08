@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, FormEvent, Suspense, startTransition } from 'react';
+import { Spinner } from '@/components/spinner';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { loginAction } from '@/app/actions';
@@ -47,7 +48,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="glass-card rounded-2xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-800 space-y-5">
+    <div className="glass-card rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-800 space-y-5">
       {error && (
         <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs flex items-start gap-2.5">
           <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
@@ -98,10 +99,10 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-md shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 group mt-2"
+          className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 group mt-2"
         >
           {loading ? (
-            <span>Signing in...</span>
+            <><Spinner /><span>Signing in...</span></>
           ) : (
             <>
               <span>Sign In</span>
@@ -120,7 +121,7 @@ function LoginForm() {
           <button
             type="button"
             onClick={() => handleDemoFill('admin')}
-            className="px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100 dark:hover:bg-amber-900/40 border border-amber-300 dark:border-amber-800/50 text-amber-900 dark:text-amber-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
+            className="px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100 dark:hover:bg-amber-900/40 border border-amber-300 dark:border-amber-800/50 text-amber-900 dark:text-amber-200 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
           >
             <Shield className="w-3.5 h-3.5 text-amber-600" />
             Admin Demo
@@ -128,7 +129,7 @@ function LoginForm() {
           <button
             type="button"
             onClick={() => handleDemoFill('user')}
-            className="px-3 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 border border-indigo-300 dark:border-indigo-800/50 text-indigo-900 dark:text-indigo-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
+            className="px-3 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 border border-indigo-300 dark:border-indigo-800/50 text-indigo-900 dark:text-emerald-200 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors"
           >
             <User className="w-3.5 h-3.5 text-indigo-600" />
             User Demo
@@ -141,18 +142,18 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 ambient-glow">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-[#0d1210] text-slate-900 dark:text-slate-100">
       <div className="w-full max-w-md space-y-6">
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-teal-400 items-center justify-center text-white shadow-lg shadow-indigo-500/25">
+          <div className="inline-flex w-12 h-12 rounded-2xl bg-white items-center justify-center text-slate-900 border border-border shadow-sm">
             <BookOpen className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Welcome back to CareGuide
+            CareGuide
           </h1>
           <p className="text-xs text-slate-600 dark:text-slate-400">
-            Sign in to access your secure notes, posts, and dashboard.
+            SECURE NOTES & COMMUNITY PLATFORM
           </p>
         </div>
 
